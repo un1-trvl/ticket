@@ -1,0 +1,290 @@
+/* =====================================================
+   GLOBAL RESET & BASE
+===================================================== */
+* {
+    box-sizing: border-box;
+    font-family: 'Urbanist', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f6fb;
+    color: #333;
+}
+
+
+/* =====================================================
+   COMMON CONTAINERS
+===================================================== */
+.container {
+    padding: 15px;
+}
+
+.box,
+.invoice {
+    background: #ffffff;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1.5px solid #d6d6d6;
+}
+
+
+/* =====================================================
+   LOGO & HEADER
+===================================================== */
+.logo-header,
+.print-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e1e1e1;
+}
+
+.logo-header img,
+.company img {
+    width: 70px;
+    height: auto;
+}
+
+.logo-header h2,
+.print-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #1e3c72;
+}
+
+.logo-header p,
+.print-header p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #555;
+}
+
+
+/* =====================================================
+   FORM ELEMENTS (INDEX PAGE)
+===================================================== */
+input {
+    width: 100%;
+    padding: 9px 10px;
+    margin: 6px 0;
+    border: 1px solid #cfcfcf;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #1e3c72;
+}
+
+button {
+    padding: 10px 16px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    background: #1e3c72;
+    color: #ffffff;
+}
+
+button:hover {
+    background: #16305a;
+}
+
+
+/* =====================================================
+   PASSENGER BLOCK (INDEX)
+===================================================== */
+.passenger {
+    border: 1px dashed #bdbdbd;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+.passenger button {
+    background: #d32f2f;
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   GST PREVIEW (INDEX)
+===================================================== */
+.gst-preview {
+    background: #f1f8ff;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+    font-size: 14px;
+    border: 1px solid #d6e4f0;
+}
+
+.gst-preview p {
+    margin: 4px 0;
+}
+
+.gst-preview .total {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e3c72;
+}
+
+
+/* =====================================================
+   PRINT PAGE - JOURNEY LINE
+===================================================== */
+.journey {
+    margin: 12px 0 16px;
+    font-size: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #cfcfcf;
+}
+
+
+/* =====================================================
+   PASSENGER TABLE (PRINT)
+===================================================== */
+.passenger-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    border: 1px solid #cfcfcf;
+}
+
+.passenger-table th,
+.passenger-table td {
+    border: 1px solid #cfcfcf;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.passenger-table th {
+    background: #f1f5fb;
+    font-weight: 600;
+    color: #1e3c72;
+}
+
+.passenger-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.passenger-table td:last-child,
+.passenger-table th:last-child {
+    text-align: right;
+}
+
+.passenger-table td:nth-child(4) {
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   GST SUMMARY (PRINT)
+===================================================== */
+.gst-summary {
+    width: 320px;
+    margin-left: auto;
+    margin-top: 14px;
+    background: #fafafa;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #cfcfcf;
+}
+
+.gst-summary div {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed #d0d0d0;
+    font-size: 14px;
+}
+
+.gst-summary .total {
+    font-weight: 700;
+    font-size: 16px;
+    border-bottom: none;
+    border-top: 2px solid #1e3c72;
+    padding-top: 8px;
+    color: #1e3c72;
+}
+
+
+/* =====================================================
+   NOTICE, TERMS & FOOTER
+===================================================== */
+.notice {
+    background: #fff3cd;
+    padding: 10px;
+    margin-top: 14px;
+    border-radius: 6px;
+    border: 1px dashed #f0c36d;
+    font-size: 13px;
+}
+
+.terms {
+    font-size: 12px;
+    color: #555;
+    margin-top: 12px;
+    line-height: 1.5;
+    border-top: 1px dashed #cfcfcf;
+    padding-top: 8px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-top: 12px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 6px;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS (PRINT PAGE)
+===================================================== */
+.action-buttons {
+    text-align: center;
+    margin: 20px;
+}
+
+.action-buttons button {
+    width: auto;
+    margin: 0 6px;
+}
+
+
+/* =====================================================
+   PRINT FIXES (VERY IMPORTANT)
+===================================================== */
+@media print {
+
+    body {
+        background: #ffffff;
+        margin: 0;
+    }
+
+    .action-buttons {
+        display: none;
+    }
+
+    .invoice {
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

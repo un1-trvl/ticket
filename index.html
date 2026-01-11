@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Paradise Travels – Ticket Booking</title>
+<link rel="stylesheet" href="files/style.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="box">
+
+    <!-- LOGO + HEADING -->
+    <div class="logo-header">
+      <img src="files/logo.png" alt="Paradise Travels">
+      <div>
+        <h2>Paradise Travels</h2>
+        <p>Passenger Ticket Booking</p>
+      </div>
+    </div>
+
+    <h3>Journey Details</h3>
+    <input id="from" value="Chennai">
+    <input id="to" value="Hyderabad">
+    <input id="date" type="date">
+
+    <h3>Passenger Details</h3>
+    <div id="passengerList"></div>
+
+    <button onclick="addPassenger()">Add Passenger</button>
+
+    <h3>Fare</h3>
+    <input id="fare" type="number" placeholder="Base Fare" oninput="calculateGST()">
+
+    <div class="gst-preview">
+      <p>CGST (2.5%): ₹<span id="cgst">0.00</span></p>
+      <p>SGST (2.5%): ₹<span id="sgst">0.00</span></p>
+      <p class="total">Total: ₹<span id="total">0.00</span></p>
+    </div>
+
+    <button onclick="bookTicket()">Book Ticket</button>
+
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   GLOBAL REFERENCES
+===================================================== */
+const passengerList = document.getElementById("passengerList");
+
+/* =====================================================
+   ADD PASSENGER
+===================================================== */
+function addPassenger(data = {}) {
+    const div = document.createElement("div");
+    div.className = "passenger";
+    div.innerHTML = `
+        <input class="pname" placeholder="Name" value="${data.name || ""}">
+        <input class="page" type="number" placeholder="Age" value="${data.age || ""}">
+        <input class="pmobile" placeholder="Mobile" value="${data.mobile || ""}">
+        <input class="pseat" placeholder="Seat No" value="${data.seat || ""}">
+        <button type="button" onclick="removePassenger(this)">Remove</button>
+    `;
+    passengerList.appendChild(div);
+}
+
+/* Prevent removing last passenger */
+function removePassenger(btn) {
+    if (passengerList.children.length > 1) {
+        btn.parentElement.remove();
+    } else {
+        alert("At least one passenger is required.");
+    }
+}
+
+/* DEFAULT ONE PASSENGER */
+addPassenger();
+
+/* =====================================================
+   DAILY AUTO-INCREMENT PNR
+===================================================== */
+function generateTicketNumber() {
+    const d = new Date();
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = String(d.getFullYear()).slice(-2);
+
+    const key = "pnr_" + dd + mm + yy;
+    let count = localStorage.getItem(key);
+    count = count ? Number(count) + 1 : 1;
+    localStorage.setItem(key, count);
+
+    return "PT" + dd + mm + yy + String(count).padStart(3, "0");
+}
+
+/* =====================================================
+   GST CALCULATION (LIVE)
+===================================================== */
+function calculateGST() {
+    const base = Number(fare.value) || 0;
+    const cg = base * 0.025;
+    const sg = base * 0.025;
+    const tot = base + cg + sg;
+
+    document.getElementById("cgst").innerText = cg.toFixed(2);
+    document.getElementById("sgst").innerText = sg.toFixed(2);
+    document.getElementById("total").innerText = tot.toFixed(2);
+}
+
+/* =====================================================
+   BOOK TICKET
+===================================================== */
+function bookTicket() {
+    const passengers = [];
+
+    document.querySelectorAll(".passenger").forEach((p, index) => {
+        let name = p.querySelector(".pname").value.trim();
+        let age = p.querySelector(".page").value.trim();
+        let mobile = p.querySelector(".pmobile").value.trim();
+        let seat = p.querySelector(".pseat").value.trim();
+
+        /* AUTO-COPY FROM PREVIOUS PASSENGER */
+        if (index > 0) {
+            const prev = passengers[index - 1];
+            if (!name) name = prev.name;
+            if (!age) age = prev.age;
+            if (!mobile) mobile = prev.mobile;
+            if (!seat) seat = prev.seat;
+        }
+
+        passengers.push({ name, age, mobile, seat });
+    });
+
+    const existing = JSON.parse(localStorage.getItem("ticketData"));
+
+    const ticket = {
+        ticketNo: existing?.ticketNo || generateTicketNumber(),
+        from: from.value,
+        to: to.value,
+        date: date.value,
+        fare: Number(fare.value) || 0,
+        passengers
+    };
+
+    localStorage.setItem("ticketData", JSON.stringify(ticket));
+    window.location.href = "print.html";
+}
+
+/* ================= DEFAULT TODAY DATE ================= */
+(function setTodayDate() {
+    const today = new Date().toISOString().split("T")[0];
+    const dateInput = document.getElementById("date");
+
+    // Set only if empty (important for edit mode)
+    if (!dateInput.value) {
+        dateInput.value = today;
+    }
+})();
+
+
+/* =====================================================
+   EDIT / NEW MODE RESTORE (CRITICAL FIX)
+===================================================== */
+const mode = localStorage.getItem("editMode");
+const saved = JSON.parse(localStorage.getItem("ticketData"));
+
+if (mode === "edit" && saved) {
+
+    // Restore journey details
+    from.value = saved.from || "Chennai";
+    to.value = saved.to || "Hyderabad";
+    date.value = saved.date || "";
+    fare.value = saved.fare || "";
+
+    // Restore passengers
+    passengerList.innerHTML = "";
+    saved.passengers.forEach(p => addPassenger(p));
+
+    calculateGST();
+}
+
+if (mode === "new") {
+    passengerList.innerHTML = "";
+    addPassenger();
+    fare.value = "";
+    calculateGST();
+}
+
+/* CLEANUP */
+localStorage.removeItem("editMode");
+</script>
+
+
+</body>
+</html>

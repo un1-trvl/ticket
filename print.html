@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Paradise Travels – Ticket</title>
+<link rel="stylesheet" href="files/style.css">
+</head>
+<body>
+
+<div class="invoice">
+
+  <!-- HEADER -->
+  <div class="print-header">
+    <div class="company">
+      <img src="files/logo.png">
+      <div>
+        <h2>Paradise Travels</h2>
+        <p>Passenger Bus Ticket</p>
+      </div>
+    </div>
+    <div>
+      <b>PNR:</b><br><span id="pnr"></span><br>
+      <small>Passenger Copy</small>
+    </div>
+  </div>
+
+  <p class="journey">
+    <b>From:</b> <span id="from"></span> |
+    <b>To:</b> <span id="to"></span> |
+    <b>Date:</b> <span id="date"></span>
+  </p>
+
+  <table class="passenger-table">
+    <thead>
+      <tr>
+        <th>Name</th><th>Age</th><th>Mobile</th><th>Seat</th><th>Price</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+
+  <div class="gst-summary">
+    <div>CGST (2.5%) <span>₹<span id="cgst"></span></span></div>
+    <div>SGST (2.5%) <span>₹<span id="sgst"></span></span></div>
+    <div class="total">TOTAL <span>₹<span id="total"></span></span></div>
+  </div>
+
+  <p><b>Amount in Words:</b> <span id="words"></span></p>
+
+  <p class="notice"><b>Important:</b> Please carry valid ID proof during the journey.</p>
+
+  <p class="terms">
+    <b>Terms & Conditions:</b><br>
+    1. Ticket is non-transferable.<br>
+    2. Report 15 minutes before departure.<br>
+    3. Management not responsible for luggage loss.<br>
+    4. No refund after journey commencement.
+  </p>
+
+  <p class="footer">
+    Paradise Travels | Customer Care: +91 87544 24365<br>
+    This is a computer-generated ticket.
+  </p>
+
+</div>
+
+<div class="action-buttons">
+  <button onclick="print()">Print</button>
+  <button onclick="edit()">Edit</button>
+  <button onclick="newBook()">Book New</button>
+</div>
+
+<script>
+const t=JSON.parse(localStorage.getItem("ticketData"))||{};
+from.innerText=t.from||"";
+to.innerText=t.to||"";
+date.innerText=t.date||"";
+pnr.innerText=t.ticketNo||"";
+
+const base=t.fare||0;
+const cg=base*0.025, sg=base*0.025, tot=base+cg+sg;
+cgst.innerText=cg.toFixed(2);
+sgst.innerText=sg.toFixed(2);
+total.innerText=tot.toFixed(2);
+
+const rows=document.getElementById("rows");
+const per=base/t.passengers.length;
+t.passengers.forEach(p=>{
+  rows.innerHTML+=`
+  <tr>
+    <td>${p.name}</td>
+    <td>${p.age}</td>
+    <td>${p.mobile}</td>
+    <td><b>${p.seat}</b></td>
+    <td>₹${per.toFixed(2)}</td>
+  </tr>`;
+});
+
+words.innerText=numWords(Math.round(tot))+" Rupees Only";
+
+function edit(){
+  localStorage.setItem("editMode","edit");
+  location.href="index.html";
+}
+function newBook(){
+  localStorage.clear();
+  location.href="index.html";
+}
+
+function numWords(n){
+  const o=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine"];
+  const t=["Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  const d=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  if(n<10)return o[n];
+  if(n<20)return t[n-10];
+  if(n<100)return d[Math.floor(n/10)]+" "+o[n%10];
+  if(n<1000)return o[Math.floor(n/100)]+" Hundred "+numWords(n%100);
+  if(n<100000)return numWords(Math.floor(n/1000))+" Thousand "+numWords(n%1000);
+  return numWords(Math.floor(n/100000))+" Lakh "+numWords(n%100000);
+}
+</script>
+
+</body>
+</html>
